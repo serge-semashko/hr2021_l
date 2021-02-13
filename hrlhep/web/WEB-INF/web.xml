@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app>
+
+    <session-config>
+      <session-timeout>720</session-timeout>
+    </session-config>
+
+    <display-name>hrlhep v2.0.0</display-name>
+    <description>hrlhep v2.1.0</description>
+
+    <servlet>
+        <servlet-name>hrlhep</servlet-name>
+        <servlet-class>jinr.hrlhep.Servlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>hrlhep</servlet-name>
+        <url-pattern>/hrlhep</url-pattern>
+    </servlet-mapping>
+
+
+<!-- security-constraint>
+	<web-resource-collection>
+		<web-resource-name>Entire Application</web-resource-name>
+		<url-pattern>/*</url-pattern>
+	</web-resource-collection>
+	<user-data-constraint>
+		<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+	</user-data-constraint>
+</security-constraint -->
+    
+</web-app>

@@ -1,0 +1,30 @@
+[comments]
+descr=S: 
+input=vu_id - ID юзера, кем нужно прикинуться
+output=
+parents=
+childs=
+testURL=?c=sys/setVU&
+author=Куняев
+[end]
+
+[parameters]
+request_name=S:стать пользователем #vu_id#
+tableCfg=table_no
+[end]
+
+[report]
+    <script>
+        alert("vu_id=#vu_id#; #IS_SYS_ADMIN#;");  ??
+        setCookie("vu_id", "#vu_id#");
+        top.window.location.replace("#ServletPath#?tm=" + (new Date()).getTime() );  
+    </script>
+    $SET_PARAMETERS_SESSION AR_ADMIN=; AR_SYS_ADMIN=; AR_LAB_ADMIN=;  ??vu_id>0
+     ??&IS_SYS_ADMIN=1
+    $INCLUDE sys/get_curr_user.ajm[clear] 
+[end]
+
+[preSQLs]
+    select is_admin(#USER_ID#, null, null) as IS_SYS_ADMIN from dual; ??USER_ID&vu_id>0&!VU
+    select is_admin(#VU#, null, null) as IS_SYS_ADMIN from dual; ??VU&vu_id>0
+[end]

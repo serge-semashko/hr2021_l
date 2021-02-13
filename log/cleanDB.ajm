@@ -1,0 +1,49 @@
+[report]
+<br><br><center><h4>Очиствка БД - удаление данных об удаленных документах</h4>
+<br></center>
+<xmp>
+$INCLUDE [clearDB]
+</xmp>
+$GET_DATA [clearDB]
+[end]
+
+[clearDB]
+delete from d_list where is_deleted=1
+;
+try: delete from d_data_1 where doc_id not in (select id from d_list)
+;
+try: delete from d_data_2 where doc_id not in (select id from d_list)
+;
+try: delete from d_data_3 where doc_id not in (select id from d_list)
+;
+try: delete from d_data_4 where doc_id not in (select id from d_list)
+;
+try: delete from d_data_5 where doc_id not in (select id from d_list)
+;
+try: delete from d_data_6 where doc_id not in (select id from d_list)
+;
+try: delete from d_data_7 where doc_id not in (select id from d_list)
+;
+try: delete from d_data_8 where doc_id not in (select id from d_list)
+;
+try: delete from d_data_9 where doc_id not in (select id from d_list)
+;
+delete from d_access_log where doc_id not in (select id from d_list)
+;
+delete from wf_list where doc_id not in (select id from d_list)
+;
+delete from wf where wf_id not in (select id from wf_list)
+;
+delete from wf_events where doc_id not in (select id from d_list)
+;
+delete from wf_events_notifications where event_id not in (select id from wf_events)
+;
+delete from d_sent_FYI where  doc_id not in (select id from d_list)
+;
+delete from doc_files where  doc_id not in (select id from d_list)
+;
+delete from wf_history where doc_id not in (select id from d_list)
+;
+delete from a_user_role where active=0
+;
+[end]

@@ -1,0 +1,265 @@
+request_stat.cfg
+
+[comments]
+SYS: Статистика http-запросов.
+input=
+output=HTML таблица http-запросов, 
+parents=
+childs=sys/viewRequest
+[end]
+
+
+[parameters]
+service=dubna.walt.service.TableServiceSimple
+service=dubna.walt.service.TableServiceSpecial ??
+title=***СТАТ-СЭД
+request_name=Статистика запросов
+
+debug=off
+KeepLog=false
+tableCfg=table_no
+
+[end]
+
+[report header]
+$SET_PARAMETERS RWACC=Y; 
+ ??USER_ID=1|USER_ID=28
+$INCLUDE [OK report header]  ??RWACC
+[end]
+
+
+[OK report header]
+$INCLUDE dat/common.dat[head]
+
+<style type="text/css">
+$INCLUDE free/main_css_noDB.cfg[report]
+</style>
+
+<script type="text/javascript">
+$INCLUDE free/main_js_noDB.cfg[report]
+</script>
+<SCRIPT language=JavaScript src="#jsPath#lib.js"></SCRIPT>
+
+<style>
+table.tlist td {text-align:left; padding:3px;}
+table.tlist td.r {text-align:right;}
+td.lab {text-align:right;}
+.filter {color:black;}
+body {background-color:##c0c0c0;}
+</style>
+</head>
+
+<body>
+
+<table border=0 cellpadding=0 cellspacing=0 width=98% style="margin:10px;">
+<tr><td class="bg_white" width=1% nowrap style="padding:2px;"><h3>СЭД&nbsp;-&nbsp;статистика&nbsp;запросов</h3></td>
+<td style="padding:5px 0 2px 20px;">
+<a href="#ServletPath#?c=sys/request_log">Лог запросов>></a></td>
+<td align=right nowrap=true>
+</td><td align=right nowrap=true>
+<a class=info href="/adb/adb">
+Главная</a>
+</td></tr></table>
+
+<form name="theForm" method="POST" enctype="multipart/form-data" >
+<input type=hidden name="c" value="#c#">
+<input type=hidden name="cop" value="">
+<input type=hidden name="srn" value="#srn#">
+<input type=hidden name="srt" value="#srt#">
+<input type=hidden name="desc" value="#desc#">
+
+================================== FILTERS ==================================== ??
+<center>
+<table border=0 cellpadding=0 cellspacing=0 style="border:solid 1px gray; margin:10px 0 20px 0px; background-color:white;"><tr><td>
+<table border=0 cellpadding=4 style="border:solid 1px gray;">
+<tr><td colspan=3>Пользователь:<input size=20 name="f_user" value="#f_user#"> &nbsp; 
+Подразделение:<select name=f_lab><option value=''></option><option value='ALL'>без ограничения</option>#F_LABS#</select> ??
+</td></tr>
+
+<tr><td class=lab></td><td colspan=3>
+<input type=radio name="f_login" value=""
+checked ??!f_login
+>все <input type=radio name="f_login" value="Y"
+checked ??f_login=Y
+>залогиненые <input type=radio name="f_login" value="N"
+checked ??f_login=N
+>не залогиненые
+<input type=checkbox name=exceptMe
+checked ??exceptMe
+> кроме меня
+</td></tr>
+
+<tr><td class=lab>C:</td><td colspan=3><input size=15 name="f_c" value="#f_c#">
+Запрос: <input size=15 name="f_query" value="#f_query#"></td>
+</tr>
+
+<tr><td class=lab>IP:</td><td><input size=12 name="f_IP" value="#f_IP#">
+<input type=checkbox name=ip_exept
+checked ??ip_exept
+> кроме</td>
+
+<td class=lab>Сессия:</td><td><input size=10 name="f_sess_id" value="#f_sess_id#"></td>
+</tr>
+
+<tr><td class=lab>REF.:</td><td><input size=20 name="f_ref" value="#f_ref#"></td></tr>
+
+<tr><td class=lab>Ошибки:</td><td colspan=3>
+<input type=radio name="f_err" value=""
+checked ??!f_err
+>все <input type=radio name="f_err" value="Y"
+checked ??f_err=Y
+>все ошибки 
+<input type=radio name="f_err" value="NF"
+checked ??f_err=NF
+>не исправленные
+<input type=radio name="f_err" value="N"
+checked ??f_err=N
+> без ошибки</td>
+</tr></table>
+</td><td style="border-bottom:solid 1px gray; border-right:solid 1px gray;">
+================================== ГРУППИРОВКА ==================================== ??
+<table border=0 cellpadding=4 style="border-bottom:solid 1px gray; border-top:solid 1px gray;">
+<tr><td class=lab>Группировка:</td><td>
+<select name=f1>
+$INCLUDE [options]
+</select>
+<br>
+<select name=f2>
+<option value="">-</option>
+$INCLUDE [options]
+</select>
+</td></tr>
+
+<tr><td class=lab>Сортировка:</td><td>
+<select name=SORT>
+<option value="">-</option>
+$INCLUDE [options]
+</select>
+</td></tr></table>
+
+<br><br><center>
+<input type="submit" class="butt1" style="width:80;" value=" OK " >
+</center>
+</td></tr></table>
+
+================================== FILTERS-END ==================================== ??
+
+<script>
+var frm=document.theForm;
+
+selectOptionByVal(frm.f1,'#f1#');
+selectOptionByVal(frm.f2,'#f2#'); ??f2
+selectOptionByVal(frm.SORT,'#SORT#'); ??SORT
+
+function refrSelf()
+{ document.theForm.submit();
+}
+
+setStandardEvents(); ??
+window.focus();
+</script>
+
+<table class="tlist tblue" style="border:solid 1px ##004060;" cellspacing=0>
+[end]
+
+[options]
+<option value="FIO">Пользователь</option>
+<option value="REQ">Запрос</option>
+<option value="MON">Месяц</option>
+<option value="DAY">День</option>
+[end]
+
+[report footer]
+</TABLE>  
+</center>
+
+</div> ??
+</form>
+
+<script>
+var frm=document.theForm;
+setStandardEvents(); ??
+</script>
+</body></html>
+[end]
+
+****************************************************************************
+****************************************************************************
+****************************************************************************
+
+[preSQLs]
+try: select cast('#f_user#' as unsigned) as f_user_id ??f_user
+;
+try: select count(a.ID) as TOT_NUM_ROWS
+from a_req_log a
+$INCLUDE [criteria] ??f_user|f_query|f_IP|f_sess_id|f_login|f_err|exceptMe
+
+[end]
+
+
+[SQL]
+select ' ' as A
+$INCLUDE [field_user]  ??f1=FIO
+, a.C        ??f1=REQ
+, DATE_FORMAT(a.DAT,'%Y, %M') as MON   ??f1=MON
+, DATE_FORMAT(a.DAT,'%d.%m.%Y') as DAY   ??f1=DAY
+
+$INCLUDE [field_user]  ??f2=FIO
+, a.C        ??f2=REQ
+, DATE_FORMAT(a.DAT,'%Y, %M') as MON   ??f2=MON
+, DATE_FORMAT(a.DAT,'%d.%m.%Y') as DAY   ??f2=DAY
+
+, count(a.ID) as NUM_QUERIES
+
+from a_req_log a
+$INCLUDE [criteria]
+group by 
+    A
+    , USERNAME ??f1=FIO|f2=FIO
+    , a.C   ??f1=REQ|f2=REQ
+    , MON   ??f1=MON|f2=MON
+    , DAY   ??f1=DAY|f2=DAY
+order by A
+    , USERNAME ??SORT=FIO
+    , a.C   ??SORT=REQ
+    , DATE_FORMAT(a.DAT,'%Y%m') desc   ??SORT=MON
+    , DATE_FORMAT(a.DAT,'%Y%m%d') desc   ??SORT=DAY
+    , a.DAT desc   ??SORT=MON_ZZZ
+, NUM_QUERIES desc
+[end]
+
+[field_user]
+, concat('<a href="#ServletPath#?c=sys/request_stat&f_user=',cast(a.USER_ID as char),'">'
+, ifnull(u.F,'?'), '</a> (', '<a href="#ServletPath#?c=sys/request_log&f_user=',cast(a.USER_ID as char),'" target=_blank>', cast(a.USER_ID as char),')</a>') as USERNAME
+[end]
+
+
+
+[criteria]
+  left join #table_users_full# u on u.id=a.user_id
+where 
+ 1=1
+ and a.user_id=#f_user_id# ??f_user_id>0
+ and (upper(u.login) like upper('#f_user#%') or upper(u.FIO) like upper('#f_user#%')) ??f_user&f_user_id=0
+ and upper(a.QUERY) like upper('%#f_query#%')  ??f_query
+ and a.IP like '#f_IP#%' ??f_IP&!ip_exept
+ and a.IP not like '#f_IP#%' ??f_IP&ip_exept
+ and a.C like '#f_c#%' ??f_c
+ and a.SESS_ID=#f_sess_id# ??f_sess_id
+ and a.REF like '%#f_ref#%' ??f_ref
+ and a.USER_ID>0 ??f_login=Y
+ and a.USER_ID=0 ??f_login=N
+ and not a.err is null and not a.err='' ??f_err=Y
+ and a.err is null and not a.err=''  ??f_err=N
+ and not a.err is null and not a.err='' and FIXED is null ??f_err=NF
+ and a.USER_ID<>#USER_ID# and a.IP<>'#ClientIP#' and a.IP<>'159.93.40.211' ??exceptMe
+[end]
+
+[ColNames]
+A=.
+USERNAME=Пользователь
+MON=месяц
+DAY=день
+С=запрос
+NUM_QUERIES=кол-во
+[end]

@@ -1,0 +1,27 @@
+[comments]
+descr=SYS: Установка play-режима
+input=
+output=
+parents=main.cfg
+childs=
+[end]
+
+[parameters]
+LOG=ON
+[end]
+
+
+[report]
+$INCLUDE [report_] ??AR_SYS_ADMIN=1|VU
+[end]
+
+
+[report_]
+$SET_PARAMETERS_SESSION playMode=on; ??setPlayMode
+$SET_PARAMETERS_SESSION playMode=; ??!setPlayMode
+$SET_PARAMETERS_SESSION playMode=; ??!USER_ID=2309&!VU=2309
+<script>
+alert("Play mode: #playMode#");  ??
+window.parent.document.theForm.target="";  window.parent.doSubmit("", "main"); 
+</script>
+[end]

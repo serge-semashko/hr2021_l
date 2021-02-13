@@ -1,0 +1,45 @@
+samples/common.dat
+
+[start]
+$INCLUDE samples/common.dat[head] ??!ajax
+
+<style type="text/css"> 
+body {margin:0;  background-color:##e0e0e0;}
+.code {border:solid 1px gray; background-color:##f0f0f0; padding:10px; margin:10px 50px 10px 50px; 
+float:left; ??
+}
+.code legend {font-weight:bold; background-color:white;}
+.center {text-align:center; }
+.m20 {margin:10px; padding:5px;}
+.bg_white {background-color:white;}
+xmp {margin:0; padding:0;}
+</style>
+
+</head><body>  ??!ajax
+$INCLUDE samples/common.dat[buttons] ??ajax
+<div style="margin:-10px 20px 20px 20px;">
+[end]
+
+[head]
+<HTML><HEAD><TITLE>#title#</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+[end]
+
+[buttons]
+<div 
+style="float:right; padding:3px;"
+style="position: fixed; top:1; right:1; border:solid 1px gray; background-color:##FFFFA0; padding:5px;" ??
+>
+<input type=button class="butt1 pt" value="Закрыть" style="width:120px; margin-right:20px;" onClick="HideDialog();">
+<input type=button class="butt1 pt" value="Открыть в новом окне" style_="width:200px; margin-right:20px;" onClick=" window.open('#ServletPath#?c=#c#', '#c#');">
+</div>
+<div style="clear:both;"></div>
+[end]
+
+[bottom]
+$INCLUDE samples/common.dat[buttons] ??ajax
+
+<script>maximizeDialog();</script> ??ajax
+</body></html>  ??!ajax
+
+[end]

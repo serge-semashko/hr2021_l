@@ -1,0 +1,1 @@
+insert users (kod_fl, tab_n,f,i,o,lab_id) SELECT person_id,tab_n,f,i,o,(div_code div 100000)*100000 FROM sotrudniki WHERE tab_n=111111111111203255

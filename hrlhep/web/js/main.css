@@ -1,0 +1,32 @@
+.graphContaner
+ {
+    background: #000;
+    min-width: 500px;
+    min-height: 465px;
+    max-height: 565px;
+    margin-left: 25px;
+    padding: 10px;
+    max-width: 880px;
+    width: 720px;
+}
+.-graphContaner {
+    width: 400px;
+}
+.graphSelect {
+    margin-left: 6px;
+    dposition: relative;
+    top: 407px;
+    left: 20px;
+    z-index: 999;
+}
+.graphContaner {
+    background: #efefef;
+    border: 2px solid #898989;
+}
+
+#chart2 {
+    background-color: #e9eced;
+}
+#chart3 {
+    background-color: #e9eced;
+}

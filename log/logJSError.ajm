@@ -1,0 +1,38 @@
+sys/logJSError.ajm
+
+sys/ar/doc_access_log.cfg
+
+
+[comments]
+descr=S: Запись в лог JS ошибок
+input=
+output=HTML таблица http-запросов, 
+parents=
+childs=sys/viewRequest
+[end]
+
+
+[parameters]
+request_name=S: Запись в лог JS ошибок
+LOG=ON
+[end]
+
+[report]
+$GET_DATA [register JS error]
+.
+[end]
+
+
+[register JS error]
+insert into a_req_log (USER_ID, C, request_type, REQUEST_NAME, COOKIES, ERR, IP, USER_AGENT, REF, SESS, DID
+    , REAL_USER_ID 
+    )
+ values (#USER_ID#, '#c#', 'JS', 'JS ERROR', '#h_cookie#'
+    , '#message#'
+    , '#ClientIP#', '#h_user-agent#', '#h_referer#', '#q_JSESSIONID#', '#q_cwldid#'
+    , #VU#  ??VU
+    , 0 ??!VU
+    )
+[end]
+
+QUERY, , DOC_ID, DAT, SESS_ID

@@ -1,0 +1,35 @@
+[comments]
+descr=S: получить права доступа текущего пользователя к документу. Попутно получается общая информация о документе. Обертка для getARUD_.cfg с целью отразить в логе только результат без деталей
+input=doc_id - ID документа, [uid] - ID юзера вместо текущего.
+output=установка параметров: AR_R=Y -просмотр документа, AR_S-подпись, AR_W - изменение документа, AR_E - старт WF, AR_T - отзыв; AR_X-завершение, AR_A - админские права. Попутно ставятся параметры: CREATOR_ID, DOC_VERSION, DOC_TYPE_ID, DOC_DIVS, WF_ID, CURR_STEP, CURR_STEP_TYPE, DOC_STATUS, DOC_IS_DELETED, WF_CANCELLED, DOC_IS_CONFIDENTIAL, DOC_DATA_TABLE
+parents=
+childs=
+testURL=?c=sys/getARUD&doc_id=1&uid=1
+author=Куняев
+[end]
+
+
+[parameters]
+request_name=S:get AR 4 doc
+LOG=ON
+[end]
+
+
+[report]
+$LOG1 <b>==================== getARUD: doc_id=#doc_id#; USER_ID=#USER_ID#; ==================</b><br>
+$SET_PARAMETERS WF_ID=;
+$CALL_SERVICE c=sys/getARUD_;
+$SET_PARAMETERS AR_R=Y;  ??DOC_TYPE_ID=48
+$SET_PARAMETERS AR_W=Y;  ??USER_ID=9056&DOC_TYPE_ID=48
+
+$LOG1 === AR_R=#AR_R#; AR_S=#AR_S#; AR_W=#AR_W#; AR_E=#AR_E#; AR_T=#AR_T#; AR_X=#AR_X#; AR_A=#AR_A#; AR_CZK=#AR_CZK#;<br>
+$LOG1 === CREATOR_ID=#CREATOR_ID#; DOC_VERSION=#DOC_VERSION#; DOC_TYPE_ID=#DOC_TYPE_ID#; DOC_DIVS=#DOC_DIVS#; DOC_STATUS=#DOC_STATUS#; DOC_IS_DELETED=#DOC_IS_DELETED#; DOC_DATA_TABLE=#DOC_DATA_TABLE#<br>
+DOC_IS_REJECTED=#DOC_IS_REJECTED#;  ??
+
+$LOG1 === WF:  WF_ID=#WF_ID#; WF_ID_INACT=#WF_ID_INACT#; CURR_STEP=#CURR_STEP#; CURR_STEP_ID=#CURR_STEP_ID#; CURR_STEP_TYPE=#CURR_STEP_TYPE#; CURR_STEP_ROLES=#CURR_STEP_ROLES#; CURR_STEP_USERS=#CURR_STEP_USERS#; SET_NUMBER_AT_STEP=#SET_NUMBER_AT_STEP#; POST_DOC_AT_STEP=#POST_DOC_AT_STEP#; WF_CANCELLED=#WF_CANCELLED#; FIRST_STEP_STARTED=#FIRST_STEP_STARTED#<br>
+
+$INCLUDE docs/custom_settings.cfg[check custom accrights]
+
+$CALL_SERVICE c=sys/getLinkedAR;  ??!AR_R
+$LOG1 === LINKED_AR_R=#LINKED_AR_R#; <br>
+[end]

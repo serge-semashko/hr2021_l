@@ -1,0 +1,75 @@
+FIO = #FIO#,
+uvolen_text                             
+guid                                    KodIstKompl=000000261                                              
+F=#F#,                                       =по свободному найму                                       
+I=#I#,                                       KodUslRab=000000354                                                
+O=#O#,                                
+stepen                                  DataUslRab=2013-05-01 00:00:00.0                                   
+division                                KodUslTr=506586                                                    
+post                                    
+usl_truda=#UslTr#,                               DataUslTr=2016-02-25 00:00:00.0                                    
+usl_rab =#UslRab#                                 KodShtat=000000282                                                 
+posts =#Dolj#
+KodDolj=#KodDolj#                                                                                  
+dr =#DataRojd#                                      =000001166                                                  
+sort                                    =инженер-конструктор                                           
+category = #Kategoriya#                                
+grazhdan = #Grajd#                               
+object                                  Grafic=7 часов 12 минут (7ч. 12мин.)                               
+src_json                                DataGrafic=2020-04-01 00:00:00.0                                   
+nachalo_rab                             DataNachalo=2013-04-16 00:00:00.0                                  
+okonch_rab                              DataOkonch=2022-04-17 00:00:00.0                                   
+sovmeshenie                             Pol=Мужской                                                        
+history_contract =#IstKompl#,                       =1987-10-15 00:00:00.0                                     
+otdel                                   KodGrajd=643                                                       
+shtat_direct                            Grajd=РОССИЯ                                                       
+shtat_dir                               KodPodr=171011                                                     
+person_id_copy                          Podr=Группа №1 сверхпроводящих магнитов                            
+is_deleted                              DataPodr=2020-04-01 00:00:00.0                                     
+changed                                 DataOkl=2020-04-01 00:00:00.0                                      
+shtat =#Shtat#,
+TopParent_Name                          
+TopParent_code                          
+SubTopParent_code
+SubTopParent_Name
+div_code
+lvl3_div_code
+lvl3_div_name
+Div_name =#Podr#,
+OtdelKod
+lab_id =100000,
+stavka =#Stavka#,
+grafik_raboti
+DataUvolen
+post_code
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

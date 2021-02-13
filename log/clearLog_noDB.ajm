@@ -1,0 +1,14 @@
+clearLog_noDB.cfg
+
+[parameters]
+ResetLog=true
+debug=off
+[end]
+
+[report]
+$SET_PARAMETERS_GLOBAL log=true
+<html><title>clear SED Log</title><body>
+$LOG ===============================
+</body></html>
+[end]
+

@@ -1,0 +1,81 @@
+
+sys/get_curr_user.cfg
+
+[comments]
+descr=S: Сохранить в сессии данные юзера
+input=[refresh=y] - брать актуальные данные из view #table_users_full#_v (медленнее)
+output=установка параметров: user_F, user_I, user_O, user_FIO, user_IOF, user_email, user_phone, user_posts, user_sex, user_login, user_is_deleted, user_roles, AR_SYS_ADMIN=1, AR_LAB_ADMIN=1, AR_ADMIN=1, A_LAB_CODES, U_LAB_CODE.
+parents=main.cfg
+childs=svs/get_user_info.cfg
+testURL=?c=sys/get_curr_user
+call=$CALL_SERVICE c=sys/get_curr_user; 
+author=Куняев
+[end]
+
+[parameters]
+request_name=S:информация о пользователе
+LOG=ON
+[end]
+
+
+[report]
+$INCLUDE [set] ??logged&USER_ID&!USER_ID=0
+$INCLUDE [clear] ??!logged|!USER_ID|USER_ID=0
+[end]
+
+[set]
+$CALL_SERVICE c=svs/get_user_info; requested_user_id=#USER_ID#; refresh=#refresh#;
+$SET_PARAMETERS_SESSION user_F=#u_F#; user_I=#u_I#; user_O=#u_O#; user_FIO=#u_FIO#; user_IOF=#u_IOF#; user_email=#u_email#; user_phone=#u_phone#; user_posts=#u_posts#; user_sex=#u_sex#; user_login=#u_login#; user_roles=#u_roles#; U_LAB_CODE=#u_lab_code#; 
+
+$SET_PARAMETERS_SESSION user_access_div=#u_priv_target_1#; 
+$SET_PARAMETERS_SESSION AR_DEV=1; ??USER_ID=2309|USER_ID=97
+
+$GET_DATA [checkAdmin]
+$SET_PARAMETERS_SESSION AR_SYS_ADMIN=#AR_SYS_ADMIN_#; AR_LAB_ADMIN=#AR_LAB_ADMIN_#; AR_LAB_SECR=#AR_LAB_SECR_#; A_LAB_CODES=#A_LAB_CODES_#; 
+$SET_PARAMETERS AR_CZK_=Y; AR_LZK_=Y; ??AR_SYS_ADMIN=1
+$SET_PARAMETERS_SESSION AR_CZK=#AR_CZK_#; AR_LZK=#AR_LZK_#;
+$SET_PARAMETERS_SESSION FULL_READ_ACCESS=#FULL_READ_ACCESS_#; 
+$SET_PARAMETERS_SESSION user_access_div=;   ??FULL_READ_ACCESS=Y
+
+$SET_PARAMETERS_SESSION FULL_READ_ACCESS=Y;   ??AR_CZK_ZZZ
+$SET_PARAMETERS_SESSION AR_ADMIN=1; ??AR_SYS_ADMIN=1|AR_LAB_ADMIN=1
+$LOG get_curr_user.SET: user_access_div=#user_access_div#; AR_CZK=#AR_CZK#; AR_LZK=#AR_LZK#; FULL_READ_ACCESS=#FULL_READ_ACCESS_#; U_LAB_CODE=#U_LAB_CODE#;<br> 
+
+[end]
+
+[clear]
+$SET_PARAMETERS_SESSION user_F=; user_I=; user_O=; user_FIO=; user_IOF=; user_email=; user_phone=; user_posts=; user_sex=; user_login=; user_is_deleted=; user_roles=;
+$SET_PARAMETERS_SESSION AR_SYS_ADMIN=; AR_LAB_ADMIN=; AR_ADMIN=; A_LAB_CODES=; AR_LAB_SECR=; FULL_READ_ACCESS=; AR_CZK=; AR_LZK=;
+$LOG get_curr_user.CLEAR: user_access_div=#user_access_div#; FULL_READ_ACCESS=#FULL_READ_ACCESS_#; U_LAB_CODE=#U_LAB_CODE#; FULL_READ_ACCESS=;<br>
+[end]
+
+[checkAdmin]
+сисадмин ли юзер ??
+select is_admin(#USER_ID#, null, null) as AR_SYS_ADMIN_ from dual 
+;
+админ ли лаборатории  ??
+select concat(',',target_code) as "labs" from a_user_role where user_id=#USER_ID# and active=1 and role_id in(14) and target_type_id=1  
+;
+если лаб.админ - ставим флаг админа и коды подразделений ??
+select '1' as AR_LAB_ADMIN_, substring('#labs#',2) as "A_LAB_CODES_" ??labs
+;
+есть ли роль "просмотр доков" без цели (т.е. всех доков) ??
+select 'Y' as "FULL_READ_ACCESS_" from a_user_role where user_id=#USER_ID# and role_id=21 and target_type_id is null and target_code is null and active=1
+;
+секретать ли лаборатории ??
+select concat(',',target_code) as "labs" from a_user_role where user_id=#USER_ID# and active=1 and role_id in(13) and target_type_id=1  ??!AR_LAB_ADMIN_
+;
+если секретарь - ставим флаг секретаря и коды подразделений ??
+select '1' as AR_LAB_SECR_, substring('#labs#',2) as "A_LAB_CODES_" ??labs&!AR_LAB_ADMIN_
+;
+даем AR_LAB_SECR_ для СВА ??
+select '1' as AR_LAB_SECR_ from a_user_role where user_id=#USER_ID# and role_id in(31) and active=1 limit 1
+;
+select '1' as AR_CZK_ from a_user_role where user_id=#USER_ID# and role_id in(19,31) and active=1 limit 1
+;
+select '1' as AR_LZK_ from a_user_role where user_id=#USER_ID# and role_id in(18,31) and active=1 limit 1
+
+[end]
+
+
+есть ли роль "просмотр доков" без цели (т.е. всех доков) ??

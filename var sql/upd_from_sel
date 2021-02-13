@@ -1,0 +1,7 @@
+update sotrudniki
+ SET 
+   contract = table_b.contract
+
+FROM (SELECT contract FROM sotrudniki) as aa
+        where aa.tab_n = sotrudniki.tab_n
+        

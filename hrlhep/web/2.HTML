@@ -1,0 +1,185 @@
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<style>
+select
+
+{
+
+    width: 200px;
+
+}
+
+ 
+
+option
+
+{
+
+    padding-left: 20px;
+
+    padding-top: 3px;
+
+    padding-bottom: 3px;
+
+}
+
+ 
+
+option:hover
+
+{
+
+    background-color: #eee;
+
+}
+
+ 
+
+.icon-ok
+
+{
+
+    background: url('images/icon-ok.png') no-repeat;
+
+    background-size: 20px;
+
+    padding-left: 20px;
+
+    background-position: 0 1px;
+
+}
+
+ 
+
+.icon-error
+
+{
+
+    background: url('images/icon-fail.png') no-repeat;
+
+    background-size: 20px;
+
+    padding-left: 20px;
+
+    background-position: 0 1px;
+
+}
+
+ 
+
+select.icon-ok,
+
+select.icon-error
+
+{
+
+    padding-top: 2px;
+
+    padding-bottom: 3px;
+
+    padding-left: 16px;
+
+    background-position: 0 1px;
+
+}
+
+</style>
+<img src="trans_min_1.png"/>
+<select>
+  <option style="background-image:trans_min_1.png;">male</option>
+  <option style="background-image:url(trans_min_1.png);">female</option>
+  <option style="background-image:url(trans_min_1.png);">others</option>
+</select> 
+<br>
+<script>
+// Функция очистки класса
+
+function cleanSelect (select) {
+
+    // Очищаем от стилей
+
+    return $(select).removeClass('icon-ok').removeClass('icon-error')
+
+}
+
+ 
+
+// Формируем select и его обработчики
+
+function formSelect() {
+
+    // получаем выпадающий список с уже очищенными классами
+
+    var select = cleanSelect('.select-events');
+
+ 
+
+    // Добавляем класс, который соответствует выбранному элементу
+
+    select.addClass(select.val() == '1' ? 'icon-ok' : 'icon-error');
+
+ 
+
+    // Добавляем стили, чтобы у списка не было видно полосы прокрутки
+
+    select.css({ height: 'auto', overflow: 'hidden', zIndex: '40000' });
+
+ 
+
+    // Определяем обработчик на событие ухода мышки с области элемента
+
+    select.on('mouseleave', function () {
+
+        // Устанавливаем обычный размер
+
+        this.size = 1;
+
+        // Добавляем класс стиля в соответствии с выбранным элементом
+
+        cleanSelect(this).addClass($(this).val() == '1' ? 'icon-ok' : 'icon-error');
+
+    });
+
+ 
+
+    // Определяем обработчик на событие ухода мышки с области элемента
+
+    select.on('mouseover', function () {
+
+        // Очищаем стиль списка, чтобы он не мешал отображению
+
+        cleanSelect(this);
+
+        // Устанавливаем размер, равный количеству элементов
+
+        this.size = $(this).find('option').length;
+
+    });
+
+}
+
+ 
+
+// После загрузки DOM - получаем список
+
+$(function () {
+
+    formSelect();
+
+});
+
+</script>
+<div class="form">
+
+    <label>Некая пользовательская настройка</label>
+
+    <br/><br/>
+
+    <select class="select-events">
+
+        <option value="1" class="icon-ok">Вкл.</option> 
+
+        <option value="0" class="icon-error">Выкл.</option> 
+
+    </select>
+
+</div>

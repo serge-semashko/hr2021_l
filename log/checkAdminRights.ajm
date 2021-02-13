@@ -1,0 +1,143 @@
+sys/checkAdminRights.ajm
+
+[comments]
+descr=S: Проверить, имеет ли юзер права админа на этот документ (админ или секретарь)
+
+input=doc_id - ID документа, [DOC_TYPE_ID] - ID типа документа, [DOC_DATA_TABLE] - таблица данных документа
+output=Установка параметра AR_A=Y, попутно - DOC_TYPE_ID и DOC_DATA_TABLE, если их не было
+parents=sys/getARUD.cfg
+childs=
+testURL=?c=sys/checkAdminRights&doc_id=22
+author=Куняев
+[end]
+
+[parameters]
+service=dubna.walt.service.TableServiceSpecial
+request_name=S:проверка админ.прав юзера для док.#doc_id#
+tableCfg=table_no
+LOG=OFF
+[end]
+
+
+[report header]
+$LOG <br>+++++++++++++++++++++++++ sys/checkAdminRights HERE! ++++++++++++++++++<br>
+    $INCLUDE [check lab admin]     ??!AR_A=Y
+[end]
+
+[check lab admin]
+    $GET_DATA [get doc info] ??!DOC_TYPE_ID|!DOC_DATA_TABLE
+    $GET_DATA [get doc divs] ??!DOC_DIVS
+    $GET_DATA [get step stage]  ??!CURR_STAGE_TARGET&WF_ID&CURR_STEP
+    $GET_DATA [check lab admin SQL] ??DOC_DIVS&CURR_STAGE_TARGET
+    $GET_DATA [check common secretary]  ??!AR_A
+    $GET_DATA [check wait div admin SQL]   ??!AR_A&CURR_STEP_USERS
+[end]
+
+[item]
+    $GET_DATA [get target value] ??field_db_name
+    $GET_DATA [checkLabAdmin] 
+[end]
+
+
+[report footer]
+[end]
+
+==============================================================
+==============================================================
+==============================================================
+[preSQLs]
+    select 'Y' as "AR_A" from dual 
+    where is_admin(#USER_ID#, null, null)=1
+[end]
+
+[get doc info]
+    select /* doc type ID and data table */ 
+     type_id as "DOC_TYPE_ID" 
+    , concat('d_data_', cast(type_id as char)) as "DOC_DATA_TABLE"
+    from d_list where id=#doc_id#
+    ;
+[end]
+
+[get doc divs]
+    select group_concat(div_id) as "DOC_DIVS" from d_divs where doc_id=#doc_id#
+    ;
+[end]
+
+[get step stage]
+    select 
+         max(role_target_id) as "CURR_STAGE_TARGET"
+    from wf 
+    where 
+        wf_id=#WF_ID# 
+        and step>=#CURR_STEP# 
+        and step_type=0
+        and is_active=1 
+        and (user_id is null or user_id>0) 
+    and user_id<>#CREATOR_ID# ??
+    limit 1
+[end]
+
+
+[check lab admin SQL] ----- админ. лаборатории - проверяется, пока док. в лаборатории
+    select 'Y' as "AR_A" from a_user_role
+    where user_id=#USER_ID# 
+        and role_id in(13,14) /* секретарь - админ */
+        and target_type_id=1 /* цель - подразделение */
+        and target_code in(#DOC_DIVS#) /* коды подразделений */
+        and active=1
+    limit 0,1
+[end]
+
+[check wait div admin SQL] ----- админ. лаборатории - проверяется, ждет ли док. сотрудника лаборатории
+    select 'Y' as "AR_A" from a_user_role
+    where user_id=#USER_ID# 
+        and role_id in(13,14) /* секретарь - админ */
+        and target_type_id=1 /* цель - подразделение */
+        and target_code in( select div_code from #table_users_full# where id in(#CURR_STEP_USERS#) ) /* коды подразделений */
+        and active=1
+    limit 0,1
+[end]
+
+
+
+[check common secretary]
+    select 'Y' as "AR_A" from a_user_role
+    where user_id=#USER_ID# 
+        and role_id in(13,14) /* секретарь - админ */
+        and target_type_id is null /* цель не указана */
+        and target_code is null /* коды подразделений не указаны */
+        and active=1
+    limit 0,1
+[end]
+
+--------------------------------------------------------------------
+[SQL]
+    $INCLUDE [SQL_] ??для админов с целью НЕ подразделение (не используется)
+[end]
+
+[SQL_]
+    select /* ID of target type and info for this target type across doc fields */
+    tt.id as "target_type_id", f.info_id
+      /* doc table field name where the target code is */  
+     , field_db_name 
+    from a_target_types tt
+      join d_fields f on f.info_id=tt.info_id
+    where f.type_id=#DOC_TYPE_ID#
+    ;
+[end]
+
+
+[get target value]
+    select /* target ID from doc */ 
+    #field_db_name#_id as "TARGET_ID"
+    from #DOC_DATA_TABLE#
+    where doc_id=#doc_id#
+[end]
+
+
+[checkLabAdmin]
+    select 'Y' as "AR_A" from dual 
+    where 
+    is_admin(#USER_ID#, #target_type_id#, '#TARGET_ID#')=1 ??TARGET_ID
+    is_admin(#USER_ID#, null, null)=1 ??!TARGET_ID
+[end]

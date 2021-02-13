@@ -1,0 +1,72 @@
+
+[comments]
+descr=JavaScript - jQuery - установка обработчиков и стандартные обработчики
+testURL=free/js_jQuery.dat
+[end]
+
+[report]
+/*========================= Общее JQuery ============================*/ ??
+/*===================================================================*/ ??
+
+/*------------------ Установка обработчиков -------------------- */ ??
+var setStandardEvents = function()
+{	$('.srh, .filter, .spr_item, .pt, .info_input, .fe').unbind();
+	$('.srh, td.filter, td.spr_item, .pt, .info_input').mouseout(sel);
+	$('.srh, td.filter, td.spr_item, .pt, .info_input').mouseover(sel); 
+
+	$('.srh').click(setSrt);
+	$('.filter').click(setFilter);
+
+	$('.fe').change(setChanged); ??будем использовать на формах, чтобы отмечать, что данные изменены
+
+	$(".resize").resizable();
+	$('.info_input').click(showSprav);  // события на тестовых полях для справочников	
+console.log("...setStandardEvents..."); ??
+}
+
+/*------------------ клики-эффекты -------------------- */ ??
+
+var sel = function(ev) {
+$("##firstRow").removeClass("sel");
+	if(ev.type == "mouseover") $(this).addClass("sel");
+	else if(ev.type == "mouseout")	$(this).removeClass("sel");
+	return true;
+}
+
+//----- для кнопок -----??
+var sel_b = function(ev) {
+	if(ev.type == "mouseover") $(ev.target).addClass("ba");
+	else if(ev.type == "mouseout") $(ev.target).removeClass("ba");
+	return false;
+}
+
+============== Сортировка таблиц ================== ??
+
+var setSrt = function(ev) {
+	var s_new = $(this).attr("sr");
+	var s_old = frm.srt.value;
+console.log(s_new + " / " + s_old);
+	if (s_new == s_old)
+	{ if(frm.desc.value == 'desc') frm.desc.value = '';
+		else frm.desc.value = 'desc';
+	}
+	else
+		frm.srt.value = s_new;
+  document.theForm.submit(); ??
+        doSubmit();
+	return false;
+}
+
+var showSrt = function(srt, cl) { 
+    $("th[sr='" + srt + "']").addClass(cl); 
+}
+
+
+function goToRow(nr)
+{ 
+  document.theForm.srn.value=nr;  
+//  console.log (frm.srn.value);
+  doSubmit();
+}
+
+[end]

@@ -1,0 +1,174 @@
+docs/choose_child_type.ajm
+
+[comments]
+descr=U: Выбор типа документа при создании потомка
+
+input=
+output=Перечень возможных типов документов-потомков
+parents=docs/view_doc
+childs=docs/edit_doc
+author=Куняев
+[end]
+
+[parameters]
+request_name=U:Создание потомка документа
+
+tableCfg=table_no
+LOG=ON
+[end]
+
+[get action list]
+    select alias , value, comment from sys_const where alias like "~doc_act%"
+[end]
+
+[get action groups]
+    select value from sys_const where alias like "action_subscription_gorup%"
+[end]
+
+[report]
+    
+    $INCLUDE dat/common.dat[check login]
+    $IF cop=save
+        $JS_{
+            var subscr = JSON.parse(prm('subscr'));
+            var actList ={};
+            for (var i = 0; i<subscr.length; i++) {
+                _$LOG(2,'act='+subscr[i].name+'<br>');
+                var actname = subscr[i].name;
+                _$LOG(2,'act='+actname+'<br>');
+                actList[actname] = 'Y';
+            }
+            var str1 = JSON.stringify(actList);
+            _$LOG(2,'!!!!!!!!!!!new subscr='+str1+'<br>');
+            setPrm('newSubscr', str1);
+        $JS_}
+            $GET_DATA SQL:replace u_subscription (user_id,doc_id, events) values(#USER_ID#, #doc_id#, '#newSubscr#');
+        <script type="text/javascript">
+            HideDialog();
+        </script>
+        $BREAK
+    $EIF
+    $SET_PARAMETERS events=
+    $GET_DATA SQL:select events from u_subscription where user_id=#USER_ID# and doc_id=#doc_id#
+    $SET_PARAMETERS events={} ??!events
+    $JS var events=JSON.parse(prm('events'));
+    <div id="dataContainer" class="big" style="padding:1px 0px 1px 2px;">
+        
+        <table border=0 cellpadding=3 cellspacing=0 class="big">
+        <tr> ??
+            <th  style="width:30px;">Событие</th> ??
+            <th>значение</th> ??
+            <th>комент</th> ??
+            <th></th>??
+        </tr>  ??
+        <tr>
+        $GET_DATA SQL:select value from sys_const where alias like "~doc_action_zsubscription%"
+        $JS_{
+            var groups=JSON.parse(prm('value'));
+            _$LOG(2,"группы:<br>");
+            for (var grName in groups){
+                var group = groups[grName];
+                _$LOG(2,"группa:"+ grName +" : "+JSON.stringify(group)+"<br>");                
+                var actList = group.split(',');
+               setPrm("grName", grName);
+               setPrm("group", group);
+               _$INCLUDE("[process group]");
+            }
+        $JS_}
+        </table>
+       <input type="button" class="butt1 pt" style="margin-left:20px;" value='Сохранить' 
+            onClick="
+                var a = $('[name*=doc_action_],[name*=doc_comment_] ').serializeArray(); 
+                alert(JSON.stringify(a));??
+                AjaxCall('popupCont', 'c=docs/subscription&cop=save&subscr='+JSON.stringify(a)+'&doc_id=#doc_id#', true); 
+            "
+        />   
+       <input type="button" class="butt1 pt" style="margin-left:20px;" value='Отказаться' onClick="HideDialog();">   
+        
+    </div>    
+<script type="text/javascript">
+    showMsg("##dialog_title", "Подписка на события документа&nbsp;");
+    ShowDialog(true);
+    centerDialog(); 
+</script>
+
+[end]
+
+[process group]
+    $JS_{    
+               var actList = prm('group').split(',');
+
+               var grSubscr = "Y";
+               for (var ind in actList){
+                    actList[ind] = actList[ind].trim()
+                    var act=actList[ind];
+                    var actEv = events[act];
+                    if (typeof actEv == 'undefined') {
+                        grSubscr = "";
+                    }
+                }
+                setPrm('grSubscr',grSubscr);
+    $JS_}
+    $INCLUDE [group head]
+    $JS_{
+               _$LOG(2,"actList="+JSON.stringify(actList)+"<br>");
+               for (var ind in actList){
+                    var act=actList[ind].trim();
+                    setPrm('act', act);
+                    var actEv = events[act];
+                   _$LOG(2,"act="+act+" ev="+actEv+" typeof="+typeof actEv+"<br>");
+
+                    if (typeof actEv == 'undefined') {
+                        
+                        setPrm('actOn', "");
+                    } else {
+                        setPrm('actOn', "1");
+                    }
+                    _$INCLUDE("[group element]")
+               }
+    $JS_}
+               
+
+
+[end]
+
+[group head]
+   <tr>
+    <th style="border-top:solid 2px black;" >#grName#</th>
+    <th style="border-top:solid 2px black;">
+        <input type=checkbox 
+            checked ??grSubscr
+            value="#group#"
+            onclick="
+                var actList=this.value.split(',');
+                console.log('actlist='+JSON.stringify(actList));
+              for (var i= 0;i< actList.length; i++){
+                    var act=actList[i].trim();
+                    var lst = document.getElementsByName(act);
+                    for (var elnum=0; elnum < lst.length; elnum++)
+                        lst[elnum].checked=this.checked;
+                }
+           "
+        />    
+    </th>
+   </tr> 
+[end]
+
+
+
+
+[group element]
+    $GET_DATA SQL:select alias , value, replace(comment, "действие:", "") as comment from sys_const where alias = "#act#" 
+   <tr>
+    <td>
+        #comment#
+    </td>
+    <td>
+        <input type=checkbox name=#act#
+            style="display: none;" ??
+            checked ??actOn=1
+        />
+    </td>
+
+   </tr> 
+[end]

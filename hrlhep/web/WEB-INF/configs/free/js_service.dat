@@ -1,0 +1,80 @@
+[comments]
+descr=JavaScript - сервисные функции общего применения
+testURL=free/js_service.dat
+[end]
+
+[report]
+/*============================ Сервис =====================================*/ ??
+/*=========================================================================*/ ??
+
+var showLoading=function(targetDiv)
+{
+	$("##" + targetDiv).html($("##loadingMsg").html() ); 
+}
+
+var toggleDiv = function(target_div, delay) {
+
+  if ($('##' + target_div).css('display') == 'none' ) {
+    $('##' + target_div).show(delay);
+    return true;
+  }
+  else {
+    $('##' + target_div).hide(delay);
+    return false;
+  }
+}
+
+var getObjectById=function(elementId) { return document.getElementById(elementId);}
+
+
+/**
+ * Распознавание Float в значении input и вставка распознанного float обратно в input.
+ * Если float не распознаётся - вставляется 0.
+ */
+var fixFloat = function(input)
+{
+  var val = input.value;
+  if(val.length<1) 
+    input.value = "0";
+  else {
+    val = replaceAll(val,",",".");
+    val = parseFloat(val);
+    if(isNaN(val)) val = 0;
+    input.value = val;
+  }
+}
+
+IsNumeric = function(input)
+{ return (input - 0) == input && input.length > 0;
+}
+
+var mouseX, mouseY;
+$(document).mousemove(function(e) {
+    mouseX = e.pageX;
+    mouseY = e.pageY;
+		console.log("x=" + mouseX + "; y=" + mouseY); ??
+});
+.mouseover(); // call the handler immediately ??
+
+
+var setElement = function(div_id, txt)
+{ 
+	document.getElementById(div_id).innerHTML=txt; ??
+  if(div_id && txt)
+    $("##"+div_id).html(txt); 
+}
+
+var replaceAll = function(src, what, replacement) {
+ return src.replace(new RegExp(what,'g'),replacement); 
+}
+
+var fixSQL_TEXT = function(toDB){
+if(toDB)
+	document.theForm.SQL_TEXT.value=replaceAll(document.theForm.SQL_TEXT.value, "'", "''");
+else
+	document.theForm.SQL_TEXT.value=replaceAll(document.theForm.SQL_TEXT.value, "''", "'");
+}
+
+[end]
+
+

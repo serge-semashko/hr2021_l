@@ -1,0 +1,61 @@
+[comments]
+descr=S: Запись в лог доступа к документам
+
+input=doc_id - ID документа, [version] - версия данных документа (def: последняя), [access_type] - тип доступа к документу (def.: 1 - просмотр), [rejected] 1 - отказано в доступе (def: 0 - разрешено)
+output=запись в d_access_log
+parents=docs/*
+childs=
+call=$CALL_SERVICE c=sys/log_doc_access; doc_id=1; version=1; access_type=2; rejected=1;
+[end]
+
+[parameters]
+LOG=ON
+[end]
+
+
+[report]
+$SET_PARAMETERS access_type=1; ??!access_type
+$SET_PARAMETERS rejected=0; ??!rejected=1
+$SET_PARAMETERS doc_id=0; ??!doc_id
+$SET_PARAMETERS DOC_VERSION=0;  ??!DOC_VERSION
+$SET_PARAMETERS USER_ID=0; ??!USER_ID
+$GET_DATA [register access]
+$SET_PARAMETERS ERROR=; GET_DATA_ERROR=;
+$INCLUDE [err msg] ??rejected=1
+[end]
+
+[err msg]
+<script type="text/javascript">
+alert("Нет доступа.\n\rВозможно, изменился статус документа.");
+top.window.location.href="#ServletPath#?k=#tm#"; ??
+HideDialog();
+showDoc(false); 
+</script>  
+[end]
+
+if(window.jQuery) {
+  jConfirm("Отказано в доступе. #ServletPath#?k=#tm#","ОШИБКА!"
+, function() {alert(1);} ??
+function() {window.location.href="#ServletPath#?k=#tm#";}  ??
+);  
+}
+else {
+  window.parent.jConfirm("Отказано в доступе. / #ServletPath#?k=#tm#","ОШИБКА!"
+, function() {alert(2);} ??
+function() { top.window.location.href="#ServletPath#?k=#tm#";} ??
+);
+}
+</script>  
+[end]
+
+ ServerPath
+
+[preSQLs]
+select version as "DOC_VERSION" from d_list where id=#doc_id# ??!DOC_VERSION&doc_id>0
+[end]
+
+[register access]
+insert into d_access_log(doc_id, doc_version, user_id, access_type, dat, IP, rejected)
+values (#doc_id#, #DOC_VERSION#, #USER_ID#, #access_type#, now(), '#ClientIP#', #rejected#)
+[end]
+
