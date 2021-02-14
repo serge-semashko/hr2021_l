@@ -98,9 +98,12 @@
             <file>file:/G:/home/JINR/HR_2019/hrlhep/web/WEB-INF/configs/utils.cfg</file>
         </group>
         <group>
-            <file>file:/G:/home/HR2020/hrlhep/web/WEB-INF/configs/tab_reports_chart.cfg</file>
-            <file>file:/G:/home/HR2020/hrlhep/web/WEB-INF/configs/maps/maps_lhep_view.cfg</file>
-            <file>file:/G:/home/HR2020/hrlhep/web/WEB-INF/configs/maps/maps_lhep.cfg</file>
+            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/edit/personal.cfg</file>
+            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_personal_table.cfg</file>
+            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_bonus_otdel_table.cfg</file>
+            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_premii_table.cfg</file>
+            <file>file:/G:/home/hr2021/hrlhep/src/java/hrlhep.properties</file>
+            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_bonus_all_table.cfg</file>
         </group>
     </open-files>
 </project-private>
