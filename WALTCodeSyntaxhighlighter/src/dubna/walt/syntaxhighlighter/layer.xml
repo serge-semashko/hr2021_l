@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "https://netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-walt">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="dubna.walt.syntaxhighlighter.Bundle"/>
+                <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="FontAndColors.xml" url="FontAndColors.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="dubna.walt.syntaxhighlighter.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+                <file name="dubna-walt-syntaxhighlighter-highlight-MarkHTMLOccurrencesHighlightsLayerFactory.instance_hidden"/>
+                <file name="dubna-walt-syntaxhighlighter-highlight-WaltSyntaxtHighlightsLayerFactory.instance">
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="OptionsDialog">
+        <folder name="PreviewExamples">
+            <folder name="text">
+                <file name="x-walt" url="newcfg.cfg"/>
+            </folder>
+        </folder>
+    </folder>
+
+</filesystem>
