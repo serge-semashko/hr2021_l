@@ -1,0 +1,66 @@
+[comments]
+descr=Собирает общий JavaScript из отдельных js_xxx.dat файлов
+[end]
+
+[js]
+<script type="text/javascript">
+$INCLUDE free/main_js_noDB.cfg[report]
+</script>
+[end]
+
+http://refresh-sf.com/ - COMPRESSOR!
+
+[js]
+<script type="text/javascript">
+$INCLUDE free/main_js_noDB.cfg[report]
+</script>
+[end]
+
+
+[report]
+var frm;
+var dialogOn = false;
+var infoOn = false;
+var atab="t_myDocs";
+var module="tab_myDocs";
+var timeout_id=false;
+
+if ($.browser.msie && $.browser.version < 10) ??
+alert($.browser.msie + " : " + $.browser.mozilla + " : " + $.browser.webkit + " : " + $.browser.opera + " : " + $.browser.version); ??
+
+$INCLUDE free/js_tabs.dat[report]
+$INCLUDE free/js_forms.dat[report]
+$INCLUDE free/js_jQuery.dat[report]
+$INCLUDE free/js_popup.dat[report]
+$INCLUDE free/js_service.dat[report]
+$INCLUDE free/js_CallModule.dat[report]
+[end]
+
+
+[startup script]
+/*=============================== Startup скрипт ============================*/ ??
+<script>
+
+$SET_PARAMETERS atab=t_personal; module=tab_personal;  
+
+module="#module#"; 
+$(function(){ 
+frm=document.theForm;
+---------- установка и открытие начальной активной закладки и модуля по умолчанию ------ ??
+atab="#atab#"; 
+
+console.log("#atn#:" + atab + " : " + module);  
+---------- Подготовка и отображение закладок ------ ??
+setTabsClicks("tabs", 0); 
+
+$("##tabs").show("fold", {}, 200); 
+
+----- загрузить контент таба (вызвать нужный модуль) ??
+openTabById(atab);
+
+eval(atab + "();");
+}) 
+
+</script>
+[end]
+

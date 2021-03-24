@@ -1,0 +1,175 @@
+gateway/receive_7_sotrudnik
+
+
+[comments]
+descr=S: Прием из шлюза сотрудника
+input=Command - команда, object - объект в JSON + распарзенные параметры из JSON
+output=занесение / пометка удаленным / снятие пометки в таблице sotrudniki
+parents=gateway/receive
+author=Куняев
+[end]
+
+
+[description]
+<ol>
+<li>Проверка наличия параметров в JSON: ТабельныйНомер, ФизЛицоКод, ФИО, ПодразделениеКод.</li>
+<li>Проверка наличия записи с id=ТабельныйНомер.</li>
+<li>Выделение Ф, И, О из ФИО, занесение в параметры F, I, O</li>
+
+<li>Для команды PutObject:
+<ul>
+<li>Обновление существующей записи или добавление новой</li>
+<li>Возврат в gateway/receive REC_ID=ТабельныйНомер</li>
+</ul>
+</li>
+
+<li>Для команды DeleteObject - установка флага is_deleted=1</li>
+<li>Для команды UnDeleteObject - установка флага is_deleted=0, выставление ошибки, если запись не найдена</li>
+</ul>
+</ol>
+[end]
+
+[parameters]
+request_name=S:Прием сотрудника
+LOG=ON
+[end]
+
+
+
+[report]
+    $LOG <hr><b>receive_7_sotrudnik</b>
+    
+    $LOG7 object=#Object#;<br> 
+    $SET_PARAMETERS ERR_CODE=0; ERROR=; 
+    $SET_PARAMETERS table=sotrudniki;
+    $GET_DATA [check non-staff] ??ТабельныйНомер 
+    $INCLUDE [process staff] ??!NON-STAFF=Y
+    $SET_PARAMETERS ResultCode=0; Result=Не штат - игнорировано;  ??NON-STAFF=Y
+    $SET_PARAMETERS ResultCode=0
+[end]
+
+[process staff]
+    $LOG <br>ПодразделениеКод #ПодразделениеКод# ТабельныйНомер #ТабельныйНомер# NON-STAFF='#NON-STAFF#'
+    $SET_PARAMETERS ERR_CODE=3; ERROR=Отсутствует ПодразделениеКод; NON-STAFF=Y; ??!ПодразделениеКод
+    $SET_PARAMETERS ERR_CODE=3; ERROR=Отсутствует ТабельныйНомер #ERROR#; NON-STAFF=Y; ??!ТабельныйНомер
+    $SET_PARAMETERS ERR_CODE=3; ERROR=Отсутствует ФизЛицоКод #ERROR#; ??!ФизЛицоКод
+    $SET_PARAMETERS ERR_CODE=3; ERROR=Отсутствует ФИО  #ERROR# ??!ФИО
+    $INCLUDE [process] ??!ERROR
+[end]
+
+
+[process]
+    $GET_DATA [check existing record]
+    $GET_DATA gateway/receive_7_sotrudnik[getFIO]
+    $INCLUDE [PutObject]  ??Command=PutObject
+    $INCLUDE [DeleteObject] ??Command=DeleteObject 
+    $INCLUDE [UnDeleteObject] ??Command=UnDeleteObject 
+    $SET_PARAMETERS ResultCode=3; Result=#ERROR#; ??ERROR
+[end]
+
+[PutObject] ****** Добавление / обновление записи
+    
+    $SET_PARAMETERS REC_ID=#ТабельныйНомер#; 
+    $GET_DATA gateway/receive_7_sotrudnik[create record sotr] ??!REC_EXISTS
+    $GET_DATA gateway/receive_7_sotrudnik[update record sotr] 
+    $SET_PARAMETERS ResultCode=3; Result=#ERROR#; ??ERROR
+[end]
+
+
+[DeleteObject]   ****** Пометка на удаление
+    $SET_PARAMETERS REC_ID=#ТабельныйНомер#; 
+    $GET_DATA [mark deleted]  ??!NUM_CHILDREN>0
+    $SET_PARAMETERS ResultCode=3; Result=#ERROR#; ??ERROR
+[end]
+
+
+[UnDeleteObject]   ****** Снятие пометки на удаление
+    $SET_PARAMETERS REC_ID=#ТабельныйНомер#; 
+    $SET_PARAMETERS ERROR=Ошибка: сотрудник не найден (ТабельныйНомер: #ТабельныйНомер#); ??!REC_EXISTS
+    $GET_DATA [unmark deleted]  ??PARENT_EXISTS
+    $SET_PARAMETERS ResultCode=3; Result=#ERROR#; ??ERROR
+[end]
+
+============================================================================
+============================================================================
+============================================================================
+
+[check non-staff]
+    select case when '#ТабельныйНомер#' like 'д%' then 'Y' else '' end as "NON-STAFF"
+[end]
+
+[create record sotr] ******  добавление если нет
+    replace  #table# (tab_n, person_id, F, I, O, changed) values(#ТабельныйНомер#, #ФизЛицоКод#, '#F#','#I#','#O#', now()) 
+[end]
+
+[обновляется из исс  create record oklad] ******  добавление если нет
+    replace oklad (tab_n, oklad) values(#ТабельныйНомер#, 0) 
+[end]
+
+[check existing record] ****** Поиск существующей записи
+    select 'Y' as REC_EXISTS, tab_n as REC_ID from #table# 
+    where tab_n=#ТабельныйНомер#;
+[end]
+    select 'Y' as REC_OKL_EXISTS from oklad  обновляется из исс 
+    where tab_n=#ТабельныйНомер#;
+
+
+[getFIO]
+    select SUBSTRING_INDEX('#ФИО# ', ' ', 1) AS F;
+    select replace('#ФИО# ', '#F# ','') AS IO;
+    select SUBSTRING_INDEX('#IO# ', ' ', 1) AS I;
+    select replace('#IO# ', '#I# ','') AS O;
+
+[end]
+
+
+[update record sotr] ****** Обновление записи сотрудника
+    update #table# set person_id=#ФизЛицоКод#, F='#F#', I='#I#', O='#O#'
+     , div_code=#ПодразделениеКод#, division='#ПодразделениеНаименование#', post='#ДолжностьНаименование#', usl_rab='#УсловияРаботыНаименование#'
+     , FIO='#ФИО#'
+     , changed=now()
+     , stepen  ??
+     , grafik_raboti = '#ГрафикРаботы#' ??ГрафикРаботы
+     , DataUvolen = STR_TO_DATE('#ДатаУвольнения#', '%d.%m.%Y %H:%i:%s') ??ДатаУвольнения
+     , div_code = '#ПодразделениеКод#' ??ПодразделениеКод
+     , division = '#ПодразделениеНаименование#' ??ПодразделениеНаименование
+     , usl_truda = '#УсловияТрудаНаименование#' ??УсловияТрудаНаименование
+     , usl_rab = '#УсловияРаботыНаименование#' ??УсловияРаботыНаименование
+     , posts = '#ДолжностьНаименование#' ??ДолжностьНаименование
+     , dr  = STR_TO_DATE('#ДатаРождения#', '%d.%m.%Y %H:%i:%s')   ??ДатаРождения
+     , category = '#ТипДеятельности#' ??ТипДеятельности
+     , grazhdan = '#СтранаНаименование#' ??СтранаНаименование 
+     , nachalo_rab = STR_TO_DATE('#ДатаНачалаРаботы#', '%d.%m.%Y %H:%i:%s')  ??ДатаНачалаРаботы
+     , okonch_rab =  STR_TO_DATE('#ДатаОкончанияРаботы#', '%d.%m.%Y %H:%i:%s') ??ДатаОкончанияРаботы
+     , history_contract = '#ИсточникКомплектованияНаименование#' ??ИсточникКомплектованияНаименование
+     , shtat_direct = "Штат дирекции" ??ШтатНаименование=Штат дирекции
+     , shtat_dir = 1 ??ШтатНаименование=Штат дирекции
+     , person_id_copy = '#ФизЛицоКод#' ??ФизЛицоКод
+     , uvolen_text = '#ПричинаУвольнения#' ??ПричинаУвольнения
+     , is_deleted = 1 ?? ПричинаУвольнения
+     , shtat = '#ШтатНаименование#' ?? ШтатНаименование
+    where tab_n=#ТабельныйНомер#;
+   select Update_Parent_top_sub(#ТабельныйНомер#);
+[end]
+
+[обновляется из исс update record oklad] ****** Обновление записи оклада
+    update oklad
+     set tab_n=#ТабельныйНомер#
+     , changed=now()
+     , oklad = '#Оклад#' ??Оклад
+    where tab_n=#ТабельныйНомер#
+[end]
+
+
+
+
+============================= DeleteObject ==================================
+[mark deleted]  ******* Пометка на удаление
+    update #table# set is_deleted=1, changed=now() where tab_n=#ТабельныйНомер#
+[end]
+
+
+============================= UnDeleteObject ==================================
+[unmark deleted]  ******* Снятие пометки на удаление
+    update #table# set is_deleted=0, changed=now() where tab_n=#ТабельныйНомер#
+[end]

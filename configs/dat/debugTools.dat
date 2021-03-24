@@ -1,0 +1,33 @@
+debugTools.dat
+
+
+
+[debug links]
+<hr> ??debug=on
+<div id="debug"  style="font-size:7pt; display_:none;">Debug tools:
+
+<form name="debugForm" 
+method="POST" enctype="multipart/form-data" ??
+target="wf2">
+<input type=hidden name=c value="sys/setDebugMode">
+----------------- Вспомогательное - отладка --------------- ??
+<a href="#ServletPath#?c=sys/showLog_noDB" target=_blank>LOG</a>
+ | <a href="#ServletPath#?c=sys/cfgdoc/main_noDB" target=_blank>CFG DOC</a>
+ | <a href="#ServletPath#?c=free/main_css_noDB" target=_blank>CSS</a>
+ | <a href="#ServletPath#?c=free/main_js_noDB" target=_blank>JS</a>
+ | &nbsp; USER_ID: #USER_ID#; FIO: #user_FIO# 
+$INCLUDE dat/debugTools.dat[play] ??VU=2309|USER_ID=2309&!VU
+</form>
+</div>
+[end]
+
+[play]
+<input type=checkbox name="setPlayMode" onClick="document.debugForm.submit();"
+checked ??playMode
+>play
+[end]
+
+[VU] 
+$CALL_SERVICE c=svs/get_user_info; requested_user_id=#VU#;
+<br>(#u_IOF#)
+[end]

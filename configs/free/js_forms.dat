@@ -1,0 +1,93 @@
+[comments]
+descr=JavaScript для работы с формой, динамической подгрузки
+testURL=free/js_forms.dat
+
+[end]
+
+[report]
+
+/*=========================================================================*/ ??
+/*=============================== Работа с формой ============================*/ ??
+
+var formChanged=false;
+
+
+var checkChanged=function()
+{
+	if(formChanged)
+	{	if (confirm('При переходе изменения данных будут потеряны!\n\r\n\rНажмите "OK" для подтверждения перехода,\n\r"Отмена" для сохранения данных'))
+			formChanged = false;
+		else
+			return false;
+	}	
+	return true;
+}
+
+var setChanged=function(){	formChanged=true;}
+
+var setFilter = function(ev) {
+	var filter = $(this).attr("f");
+	var val =  $(this).attr("val");
+	if(filter && val) {
+		eval("document.theForm." + filter + ".value='" + val + "'");
+		document.theForm.submit();
+		doSubmit("", ""); ??
+	}
+	return false;
+}
+
+/*
+ * Проверка корректности ввода данных пользователем.
+ * На данный момент проверяет только наличие каких-либо данных в полях с атрибутом mand
+ * Вызывается из doSubmit() с cop=
+ */
+var checkInput=function(sel)
+{
+	var msg="";
+	sel.each( function(ind)
+    {
+      var des_id=$(this).attr("name") + "_descr";
+      if($(this)[0].type == "radio")
+      { 
+        if(!$('input[name=' + $(this)[0].name + ']:checked').val())
+        {
+          console.log($(this)[0].type + ":" + $(this)[0].name); ??
+          if(msg.indexOf($(this).attr("mand"))<0)
+            msg += ', "' + $(this).attr("mand") + '"'; 
+        }
+      }	else if ($(this).val()=='' && $(this).attr("mand")) 
+      {		msg += ', "' + $(this).attr("mand") + '"'; 
+          $("##" + des_id).addClass("MANDATORY");
+        }
+        else
+          $("##" + des_id).removeClass("MANDATORY");
+    }	
+  );
+
+	if (msg)
+	{	alert("Заполните обязательные поля"); 
+		return false;
+	}
+	return true;
+}
+/*мультивыбор из плоских справочников: удаление*/
+var STRING_VALUES_SEPARATOR='<BR/>';
+var delSelectedInfoItemFromChoice = function(el){
+    where = $(el).attr("delfrom");  //id элемента с id-шниками
+    what = $(el).attr("delval");   //значение id-шника, который удаляем
+    wheretext = $(el).attr("delfromtext"); //хидден с текстами в том же порядке, что и id-шники. (если надо)
+    if(where.length>0 && what.length>0){
+        val = $('#'+where).val();
+        tval = $('#'+wheretext).val();
+        aval = val.split(',');
+        atval = tval.split(STRING_VALUES_SEPARATOR);
+        i = aval.indexOf(what);
+        aval.splice(i,1);
+        atval.splice(i,1);
+        $('#'+where).val(aval.join());
+        $('#'+wheretext).val(atval.join(STRING_VALUES_SEPARATOR));
+        $(el).parent().remove();
+    }
+    
+}
+[end]
