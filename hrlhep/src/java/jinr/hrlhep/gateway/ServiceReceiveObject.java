@@ -8,6 +8,7 @@ import dubna.walt.util.gateway.Utils;
  */
 public class ServiceReceiveObject extends dubna.walt.service.Service {
         @Override
+        
     public void start() throws Exception {
 
         cfgTuner.getCustomSection("LOG REQUEST");        

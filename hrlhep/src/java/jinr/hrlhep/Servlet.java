@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class Servlet extends dubna.walt.BasicServlet { 
- 
+     static Monitor monitor = null;
+
     public ResourceManager obtainResourceManager() throws Exception {
         System.out.println(".\n\r.\n\r.\n\r*** GATEWAY - INIT ...");
 //  Load static resources for the app
@@ -30,6 +31,11 @@ public class Servlet extends dubna.walt.BasicServlet {
     @Override
     public void customInit() {
         try {
+            if (monitor != null) {
+                monitor.stop = true;
+            }
+            monitor = null;
+            
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
@@ -47,12 +53,41 @@ public class Servlet extends dubna.walt.BasicServlet {
         }
 
     }
+        protected static void startMonitor() {
+        String server = rm_Global.getString("ServerPath");
+//        if (!server.contains("ak0211") && !server.contains("lt-a8")) {
+        if(!rm_Global.getBoolean("NO_MONITOR")) {
+            System.out.println("*** HRJINR - startMonitor: rm_Global=" + rm_Global);
+            try {
+                if (monitor != null) {
+                    monitor.stop = true; //НА ВСЯКИЙ СЛУЧАЙ остановим
+                }
+                monitor = new Monitor(rm_Global);
+                System.out.println("*** HRJINR: Monitor=" + monitor);
+                new Thread(monitor).start();
+            } catch (Exception e) {
+                e.printStackTrace(System.out);
+            }
+        } else {
+            System.out.println("*** HRJINR - startMonitor: NOT STARTED! server=" + server);
+        }
+    }
+
+    
     
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
         try {
             super.doGet(req, res);
+            if (monitor == null || !monitor.isRunning()) {
+                System.out.println("*** HRJINR - CALL startMonitor");
+                startMonitor();
+            } else{
+                System.out.println("*** HRJINR - NOT CALL startMonitor");
+                
+            }
+            
             
         } catch (Exception e) {
             e.printStackTrace();
