@@ -82,7 +82,7 @@ public class Monitor implements Runnable {
 //                    System.out.print(" ... TASK " );
                     tm = System.currentTimeMillis();
                     task_id = rs.getInt("id");
-//                    System.out.println(" id=" + task_id);
+                    System.out.println(" id=" + task_id);
                     db.update("update schedule set active=0, lastCall=now(), lastResult='Task is running...', time=-2 where id=" + task_id);
 
                     time = "-1";

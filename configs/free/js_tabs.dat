@@ -21,7 +21,7 @@ var t_povysh = function() {AjaxCall("c_povysh", "c=tab_povysh");}
 var t_reports = function() {AjaxCall("c_reports", "c=tab_reports");}; 
 var t_samples = function() {AjaxCall("c_samples", "c=tab_samples");} 
 var t_iss = function() {AjaxCall("c_iss", "c=tab_iss");} 
-var t_rnd = function() {AjaxCall("c_rnd", "c=tab_rnd");} 
+var t_mapedit = function() {AjaxCall("c_mapedit", "c=tab_rnd");} 
 var t_map = function() {AjaxCall("c_map", "c=tab_map");} 
 var t_personal_place = function() {AjaxCall("c_personal_place", "c=tab_personal_place");} 
 var t_upgrade = function() {AjaxCall("c_upgrade", "c=tab_upgrade");} 

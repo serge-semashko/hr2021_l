@@ -128,6 +128,7 @@
             <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_personal_table.cfg</file>
             <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/dat/common.dat</file>
             <file>file:/G:/home/hr2021/hrlhep/src/java/hrlhep.properties</file>
+            <file>file:/G:/home/hr2021/hrlhep/src/java/jinr/hrlhep/Monitor.java</file>
             <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/maps/map_building.cfg</file>
             <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_bonus_all_table.cfg</file>
         </group>

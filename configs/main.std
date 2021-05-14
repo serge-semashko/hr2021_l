@@ -115,8 +115,6 @@
     $SET_PARAMETERS_SESSION  full_adm=;right_level=;fin_adm=;fte_adm=;full_fte=;fte_view=;dev_adm=;premii_filter=
     $SET_PARAMETERS_SESSION  full_admin=;fin_admin=;fte_admin=;ftelit_admin=;dev_admin=
     $LOG2 dev_admin #dev_admin# <br>
-    $SET_PARAMETERS_SESSION USER_KOD_FL=3999 ??
-    $SET_PARAMETERS_SESSION USER_KOD_FL=3663??
     $SET_PARAMETERS tab_n=;topparent_code=;subtopparent_code=
     $GET_DATA [check user rights]
 

@@ -55,7 +55,7 @@ public class Servlet extends dubna.walt.BasicServlet {
     }
         protected static void startMonitor() {
         String server = rm_Global.getString("ServerPath");
-//        if (!server.contains("ak0211") && !server.contains("lt-a8")) {
+        System.out.println("*** HRJINR - startMonitor: NO_MONITOR=" + rm_Global.getBoolean("NO_MONITOR"));
         if(!rm_Global.getBoolean("NO_MONITOR")) {
             System.out.println("*** HRJINR - startMonitor: rm_Global=" + rm_Global);
             try {
