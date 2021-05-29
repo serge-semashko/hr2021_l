@@ -89,15 +89,17 @@ function prmSet(name, val) {
 }
 function setSessPrm(name, val) {
     
-    BT._$SET_PARAMETERS("$SET_PARAMETERS_SESSION " + name+"="+val, null, out, "setsession param");
+    BT._$SET_PARAMETERS("$SET_PARAMETERS_SESSION " + name+"="+val);
 }
 // исполняется аналогично $INCLUDE 
+
 function _$INCLUDE(sectionName) {
-    BT._$INCLUDE("$INCLUDE " + sectionName, sectionLines, out, sectionName);
+    BT._$INCLUDE("$INCLUDE " + sectionName, sectionLines, out);
 }
 function _$GET_DATA(sectionName) {
-    BT._$GET_DATA("$GET_DATA " + sectionName, sectionLines, out, sectionName);
+    BT._$GET_DATA("$GET_DATA " + sectionName);
 }
+
 
 function _$LOG(lvl, msg) {
     BT.WriteLog(+lvl, msg);
