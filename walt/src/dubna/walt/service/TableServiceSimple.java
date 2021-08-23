@@ -468,8 +468,11 @@ public class TableServiceSimple extends dubna.walt.service.Service {
     protected void makeTable() throws Exception {
 //  timer = System.currentTimeMillis() / 10;
 //  System.out.println("=== TableServiceSimple - point 1 - " + (System.currentTimeMillis() / 10 - timer) / 100. + " sec.");
+        
         srn = cfgTuner.getIntParameter("srn");
         rpp = cfgTuner.getIntParameter("rpp");
+        
+        System.out.println( "!!!!!!!!!!!!!getParameters() "+cfgTuner.getParameter("rpp")+" "+cfgTuner.getIntParameter("rpp"));
         if (srn <= 0 || rpp <= 0) {
             rpp = 99999;
             srn = 1;
@@ -553,12 +556,11 @@ public class TableServiceSimple extends dubna.walt.service.Service {
             minRow = 1;
         }
         int maxRow = minRow + rpp * 10 - 1;
-        if (!cfgTuner.enabledOption("nextSetLink")) {
-            minRow = 1;
-            maxRow = rpp;
-        }
-//  tm = System.currentTimeMillis();
-//  System.out.println("srn=" + srn + "; rpp=" + rpp + "; minRow=" + minRow + "; maxRow=" + maxRow);
+//        if (!cfgTuner.enabledOption("nextSetLink")) {
+//            minRow = 1;
+//            maxRow = rpp;
+//        }
+        IOUtil.writeLogLn(5, "outTableBody: srn=" + srn + "; rpp=" + rpp + "; minRow=" + minRow + "; maxRow=" + maxRow, rm); 
         if (rpp < 101) {
             resultSet.setFetchSize(rpp);
         }

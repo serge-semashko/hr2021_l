@@ -97,40 +97,6 @@
             <file>file:/G:/home/JINR/HR_2019/hrlhep/web/WEB-INF/configs/tab_iss_table.cfg</file>
             <file>file:/G:/home/JINR/HR_2019/hrlhep/web/WEB-INF/configs/utils.cfg</file>
         </group>
-        <group>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_payment_table.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_bonus_otdel_table.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_personal_place_table.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/src/conf/MANIFEST.MF</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_bonus_otdel.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/gateway/receive_8_fizlitso.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/src/java/hrlhep.old</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/free/js_tabs.dat</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_jubilee_table.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/edit/fte_v1.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/edit/bonus_v0.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/common.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/main.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/gateway/receive_7_sotrudnik.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_salary_table.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/edit/premiya.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/utils.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/edit/personal.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_fte_table.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/maps/map_test.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/maps/maps_lhep.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/maps/maps_lhep_view.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/bonus/get_bonus_rwtable.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_map.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_bonus_all.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/getsotrlist.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/gateway/receive_42_otpusk.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_personal_table.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/dat/common.dat</file>
-            <file>file:/G:/home/hr2021/hrlhep/src/java/hrlhep.properties</file>
-            <file>file:/G:/home/hr2021/hrlhep/src/java/jinr/hrlhep/Monitor.java</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/maps/map_building.cfg</file>
-            <file>file:/G:/home/hr2021/hrlhep/web/WEB-INF/configs/tab_bonus_all_table.cfg</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

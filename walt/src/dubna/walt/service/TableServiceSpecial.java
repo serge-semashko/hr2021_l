@@ -36,10 +36,11 @@ public class TableServiceSpecial extends dubna.walt.service.TableServiceSimple {
      */
     @Override
     protected void processRecord() throws Exception {
-//        IOUtil.writeLogLn("currentRow=" + currentRow + "; srn=" + srn + "; rpp=" + rpp, rm); 
+        IOUtil.writeLogLn(5, "currentRow=" + currentRow + "; srn=" + srn + "; rpp=" + rpp, rm); 
+        //IOUtil.writeLogLn(7, currentRow + "." + colNr + ": " + colNames[colNr] + "=" + record[colNr] + ";", rm); 
         if (currentRow > srn - 2 && currentRow < srn + rpp) {
             for (int colNr = 0; colNr < numSqlColumns; colNr++) {
-IOUtil.writeLogLn(7, currentRow + "." + colNr + ": " + colNames[colNr] + "=" + record[colNr] + ";", rm); 
+//IOUtil.writeLogLn(7, currentRow + "." + colNr + ": " + colNames[colNr] + "=" + record[colNr] + ";", rm); 
                 if (record[colNr] == null || record[colNr].length() < 1) {
                     record[colNr] = " ";
                 }
@@ -72,6 +73,7 @@ IOUtil.writeLogLn(7, currentRow + "." + colNr + ": " + colNames[colNr] + "=" + r
             }
             cfgTuner.addParameter("oddRow", Integer.toString(currentRow % 2));
             cfgTuner.addParameter("currentRow", Integer.toString(currentRow + 1));
+            
             cfgTuner.outCustomSection("item", out);
         }
     }

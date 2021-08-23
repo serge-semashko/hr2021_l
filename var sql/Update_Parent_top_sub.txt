@@ -1,0 +1,101 @@
+CREATE DEFINER=`root`@`%` FUNCTION `Update_Parent_top_sub`(
+	`in_tab_n` bigint
+)
+RETURNS varchar(1200) CHARSET utf8
+LANGUAGE SQL
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT '????????? ???? TopParent ? subTopParent (????????? ? ?????/??????) ?????????? (?????? ??? ???????????)'
+BEGIN
+  DECLARE cur_id int;
+  DECLARE id1 int;
+  DECLARE id2 int;
+  DECLARE id3 int;
+  DECLARE nn int;
+  DECLARE idtt int;
+
+  DECLARE n varchar(255);
+  DECLARE n1 varchar(255);
+  DECLARE n2 varchar(255);
+  DECLARE n3 varchar(255);
+  DECLARE res varchar(1255);
+  DECLARE cur_pid int;
+  DECLARE done int DEFAULT FALSE;
+  DECLARE div1 CURSOR FOR
+  SELECT
+    id,
+    pid,
+    short_name
+  FROM struktura
+  WHERE id = idtt;
+  DECLARE sotr CURSOR FOR
+  SELECT
+    div_code
+  FROM sotrudniki
+  WHERE tab_n = in_tab_n;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+  SET cur_id = 0;
+  SET id1 = 0;
+  SET id2 = 0;
+  SET id3 = 0;
+  SET idtt = 0;
+  SET n = "";
+  SET n1 = "";
+  SET n2 = "";
+  SET n3 = "";
+  SET cur_pid = -10;
+  SET nn = 0;
+  SET res = "-";
+  OPEN sotr;
+  FETCH sotr INTO idtt;
+  CLOSE sotr;
+  SET res = concat(" UID=",in_tab_n," ");
+  IF done THEN
+    RETURN concat("User not exists tab_n=",in_tab_n);
+  END IF;
+  SET cur_id = -10;
+  SET nn = nn + 1;
+  SET done = FALSE;
+  OPEN div1;
+  FETCH div1 INTO cur_id, cur_pid, n;
+  CLOSE div1;
+  IF done THEN
+    RETURN concat("User division not exists tab_n=",in_tab_n);
+  END IF;
+  SET nn = nn + 1;
+  SET done = FALSE;
+  SET res = CONCAT(", div_id:", cur_id, " parent_id:", cur_pid, " Name:'", n);
+  WHILE NOT done DO
+    SET nn = nn + 1;
+    IF cur_pid = 0 THEN
+      UPDATE sotrudniki
+      SET lab_id = cur_id,
+          TopParent_name = n1,
+          SubTopParent_name = n2,
+          TopParent_code = id1,
+          SubTopParent_code = id2
+      WHERE tab_n = in_tab_n;
+      RETURN CONCAT("Lab_ID:", cur_id, ", TopParent=", n1, ", SubTopParent=", n2);
+    END IF;
+    IF LENGTH(res) > 1000 THEN
+      SET res = CONCAT(res, "too long!!! ");
+      RETURN res;
+    END IF;
+    SET id3 = id2;
+    SET id2 = id1;
+    SET id1 = cur_id;
+    SET n3 = n2;
+    SET n2 = n1;
+    SET n1 = n;
+    SET idtt = cur_pid;
+    OPEN div1;
+    FETCH div1 INTO cur_id, cur_pid, n;
+    CLOSE div1;
+  END WHILE;
+
+  SET nn = nn + 1;
+  SET res = CONCAT(res, " FIN :", nn, " done:", done, " ", n, ": PID:", cur_pid, " ->ID:", cur_id, "  # ");
+  RETURN res;
+END
